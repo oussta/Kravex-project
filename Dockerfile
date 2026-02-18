@@ -1,31 +1,44 @@
-# Use Debian-based Node (fixes SWC binding issues on Railway)
-FROM node:20-slim
+# Use Debian slim for glibc (fixes SWC native binding issues)
+FROM node:20-slim AS builder
 
-# Install dependencies needed for sharp (image processing in Strapi) and build tools
+# Install build deps for sharp + any native modules
 RUN apt-get update && apt-get install -y \
     build-essential \
     libvips-dev \
+    python3 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copy package files first (better caching)
+# Copy package files
 COPY package*.json ./
 
-# Install deps (use ci for clean install)
-RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
+# Install deps + force rebuild SWC for linux-x64-gnu (critical fix)
+RUN npm ci --legacy-peer-deps \
+    && npm rebuild @swc/core --update-binary \
+    && npm install @swc/core-linux-x64-gnu --save-optional || true
 
-# Copy the rest of your app
+# Copy app code
 COPY . .
 
-# Build the admin panel (now it should work without SWC crash)
+# Build admin panel (should now succeed)
 RUN npm run build
 
-# Set production env
+# Production stage (smaller final image)
+FROM node:20-slim
+
+# Same deps for runtime (sharp needs libvips)
+RUN apt-get update && apt-get install -y \
+    libvips42 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy built app + node_modules from builder
+COPY --from=builder /app /app
+
 ENV NODE_ENV=production
 
-# Expose Strapi port
 EXPOSE 1337
 
-# Start Strapi
 CMD ["npm", "start"]
