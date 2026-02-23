@@ -1,0 +1,37 @@
+{
+  "kind": "singleType",
+  "collectionName": "configuracion_generals",
+  "info": {
+    "singularName": "configuracion-general",
+    "pluralName": "configuracion-generals",
+    "displayName": "ConfiguracionGeneral"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre_sitio": {
+      "type": "string"
+    },
+    "logo": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "texto_footer": {
+      "type": "text"
+    },
+    "email_contacto": {
+      "type": "email"
+    },
+    "telefono": {
+      "type": "string"
+    }
+  }
+}

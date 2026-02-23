@@ -1,0 +1,34 @@
+{
+  "kind": "singleType",
+  "collectionName": "pagina_inicios",
+  "info": {
+    "singularName": "pagina-inicio",
+    "pluralName": "pagina-inicios",
+    "displayName": "PaginaInicio",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titulo_hero": {
+      "type": "string"
+    },
+    "subtitulo_hero": {
+      "type": "text"
+    },
+    "texto_boton": {
+      "type": "string"
+    },
+    "texto_badge": {
+      "type": "string"
+    },
+    "meta_title": {
+      "type": "string"
+    },
+    "meta_description": {
+      "type": "text"
+    }
+  }
+}
